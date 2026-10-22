@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FresaProtect - Interface Visual Mockup</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Nunito', 'sans-serif'],
+                        display: ['Fredoka', 'sans-serif']
+                    },
+                    colors: {
+                        fresa: {
+                            50: '#fff1f2',
+                            500: '#e11d48',
+                            600: '#dc2626',
+                            700: '#b91c1c'
+                        },
+                        agri: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.02); }
+        }
+        .pulse-active {
+            animation: pulseGlow 2.5s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-800 font-sans min-h-screen flex items-center justify-center p-3 sm:p-6">
+
+    <!-- Mobile Device Frame Container -->
+    <div class="w-full max-w-[410px] bg-slate-950 rounded-[44px] p-3.5 shadow-2xl border-4 border-slate-800 relative">
+        
+        <!-- Camera Lens Notch Simulation -->
+        <div class="absolute top-6 left-1/2 -translate-x-1/2 w-28 h-4 bg-slate-950 rounded-full z-30 flex items-center justify-center gap-2">
+            <div class="w-2.5 h-2.5 rounded-full bg-slate-800 border border-slate-700"></div>
+            <div class="w-1.5 h-1.5 rounded-full bg-blue-900/60"></div>
+        </div>
+
+        <!-- Phone Screen Display Frame -->
+        <div class="bg-slate-50 rounded-[34px] overflow-hidden flex flex-col h-[820px] max-h-[92vh] relative custom-scroll overflow-y-auto">
+            
+            <!-- App Header Bar -->
+            <header class="bg-agri-700 text-white px-5 pt-8 pb-4 shadow-md relative z-10 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="bg-white/15 p-2 rounded-2xl backdrop-blur-sm border border-white/20">
+                        <i class="fa-solid fa-seedling text-agri-100 text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-display font-bold text-xl tracking-wide leading-none flex items-center gap-1.5">
+                            FresaProtect 🍓
+                        </h1>
+                        <p class="text-[11px] text-agri-100 font-medium mt-0.5">Diagnóstico fácil para el campo</p>
+                    </div>
+                </div>
+                <div class="bg-agri-800/80 text-agri-100 px-2.5 py-1 rounded-full text-[10px] font-bold border border-agri-600">
+                    Modo Campo 📶
+                </div>
+            </header>
+
+            <!-- Main Content Area -->
+            <main class="p-4 flex-1 flex flex-col gap-3.5">
+
+                <!-- Helpful Tip Banner -->
+                <div class="bg-blue-50 border-l-4 border-blue-500 text-blue-900 p-3 rounded-xl text-xs flex items-center gap-2.5 shadow-2xs">
+                    <i class="fa-solid fa-circle-info text-blue-500 text-base"></i>
+                    <p class="font-medium leading-snug">
+                        <strong>Consejo:</strong> Enfoca la fresa de cerca con buena luz de día para mayor precisión.
+                    </p>
+                </div>
+
+                <!-- Interactive Camera / Photo Area -->
+                <div class="relative bg-slate-900 rounded-2xl overflow-hidden border-2 border-slate-300 shadow-inner min-h-[220px] flex flex-col items-center justify-center">
+                    
+                    <img id="activePhoto" src="https://images.unsplash.com/photo-1587393855524-087f83d95bc9?auto=format&fit=crop&w=600&q=80" alt="Fresa de muestra" class="w-full h-[220px] object-cover">
+
+                    <div id="photoPlaceholder" class="hidden text-center p-6 flex-col items-center justify-center">
+                        <i class="fa-solid fa-camera text-4xl text-slate-400 mb-2"></i>
+                        <p class="text-slate-200 font-bold text-sm">Toma una foto de tu fresa</p>
+                    </div>
+
+                    <div class="absolute bottom-2.5 right-2.5 bg-slate-900/85 backdrop-blur-md text-white text-[10px] px-2.5 py-1 rounded-lg border border-slate-700 flex items-center gap-1.5">
+                        <i class="fa-solid fa-expand text-agri-500"></i>
+                        <span>Vista enfocada</span>
+                    </div>
+                </div>
+
+                <!-- Primary Camera / Gallery Buttons -->
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="switchCategory('enfermo')" class="bg-fresa-600 hover:bg-fresa-700 text-white font-bold text-xs py-3 px-3 rounded-xl flex items-center justify-center gap-2 shadow transition active:scale-95">
+                        <i class="fa-solid fa-camera text-sm"></i>
+                        <span>Tomar Foto</span>
+                    </button>
+                    <button onclick="switchCategory('sano')" class="bg-white text-slate-700 border border-slate-300 hover:bg-slate-100 font-bold text-xs py-3 px-3 rounded-xl flex items-center justify-center gap-2 shadow-2xs transition active:scale-95">
+                        <i class="fa-solid fa-images text-agri-600 text-sm"></i>
+                        <span>Galería</span>
+                    </button>
+                </div>
+
+                <!-- Quick Category Switchers (Simulates test diagnosis) -->
+                <div class="space-y-1">
+                    <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider block">Simular diagnóstico rápido:</span>
+                    <div class="grid grid-cols-3 gap-1.5">
+                        <button onclick="switchCategory('sano')" class="bg-white border border-slate-200 text-slate-700 hover:border-agri-500 p-2 rounded-xl text-[11px] font-bold text-center transition">
+                            🟢 Fruto Sano
+                        </button>
+                        <button onclick="switchCategory('enfermo')" class="bg-white border-2 border-fresa-500 text-fresa-700 p-2 rounded-xl text-[11px] font-bold text-center transition shadow-2xs">
+                            🔴 Hongos
+                        </button>
+                        <button onclick="switchCategory('nutricional')" class="bg-white border border-slate-200 text-slate-700 hover:border-amber-500 p-2 rounded-xl text-[11px] font-bold text-center transition">
+                            🟠 Nutrición
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Main Action Button -->
+                <button onclick="runDiagnosticAnimation()" class="w-full bg-agri-600 hover:bg-agri-700 text-white font-extrabold text-sm py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 shadow-lg transition active:scale-98">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <span>🔍 Revisar mi fresa</span>
+                </button>
+
+                <!-- RESULT CARD WITH TRICOLOR CONTINUOUS BAR -->
+                <div id="resultCard" class="bg-white border border-slate-200 rounded-2xl p-4 shadow-md space-y-3">
+                    
+                    <!-- Result Title Header -->
+                    <div class="flex items-start justify-between pb-2 border-b border-slate-100">
+                        <div>
+                            <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block">Diagnóstico Principal</span>
+                            <h3 id="diagTitle" class="text-base font-extrabold text-slate-900 mt-0.5">🔴 Fruto Enfermo / Hongos</h3>
+                        </div>
+                        <span id="diagBadge" class="text-[10px] font-extrabold px-2.5 py-1 rounded-full bg-fresa-50 text-fresa-700 border border-fresa-500">
+                            Atención
+                        </span>
+                    </div>
+
+                    <!-- CONTINUOUS TRICOLOR PERCENTAGE BAR SECTION -->
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-2">
+                        <div class="flex items-center justify-between text-xs font-bold text-slate-700">
+                            <span class="flex items-center gap-1">
+                                <i class="fa-solid fa-chart-pie text-agri-600"></i>
+                                Porcentaje de Coincidencia (100%)
+                            </span>
+                        </div>
+
+                        <!-- Single Continuous Segmented Bar -->
+                        <div class="w-full bg-slate-200 rounded-full h-4 overflow-hidden flex shadow-inner border border-slate-300">
+                            <!-- Green Segment (Sano) -->
+                            <div id="barSano" class="bg-agri-500 h-full transition-all duration-700 ease-out flex items-center justify-center text-[9px] font-extrabold text-white" style="width: 8%;">
+                            </div>
+                            <!-- Red Segment (Enfermo) -->
+                            <div id="barEnfermo" class="bg-fresa-600 h-full transition-all duration-700 ease-out flex items-center justify-center text-[9px] font-extrabold text-white" style="width: 84%;">
+                            </div>
+                            <!-- Amber Segment (Nutricional) -->
+                            <div id="barNutricional" class="bg-amber-500 h-full transition-all duration-700 ease-out flex items-center justify-center text-[9px] font-extrabold text-white" style="width: 8%;">
+                            </div>
+                        </div>
+
+                        <!-- Bar Legend Underneath -->
+                        <div class="grid grid-cols-3 gap-1 pt-1 text-[10px] font-bold text-slate-600 text-center">
+                            <div class="flex items-center justify-center gap-1">
+                                <span class="w-2.5 h-2.5 rounded-full bg-agri-500 inline-block"></span>
+                                <span>Sano: <strong id="valSano" class="text-agri-700">8%</strong></span>
+                            </div>
+                            <div class="flex items-center justify-center gap-1">
+                                <span class="w-2.5 h-2.5 rounded-full bg-fresa-600 inline-block"></span>
+                                <span>Hongos: <strong id="valEnfermo" class="text-fresa-700">84%</strong></span>
+                            </div>
+                            <div class="flex items-center justify-center gap-1">
+                                <span class="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block"></span>
+                                <span>Nutrición: <strong id="valNutricional" class="text-amber-700">8%</strong></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Farmer Agronomic Recommendations -->
+                    <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-xs space-y-1.5">
+                        <div class="font-extrabold text-emerald-900 flex items-center gap-1.5">
+                            <i class="fa-solid fa-list-check text-emerald-600"></i>
+                            <span>¿Qué hacer en tu parcela?</span>
+                        </div>
+                        <p id="diagAdvice" class="text-emerald-950 font-medium leading-relaxed">
+                            1. Retira las fresas infectadas con cuidado.<br>
+                            2. Evita encharcar las plantas al regar.<br>
+                            3. Aplica el producto biológico recomendado por tu asesor técnico por la tarde.
+                        </p>
+                    </div>
+
+                </div>
+
+            </main>
+
+            <!-- App Footer Navigation -->
+            <footer class="p-3 bg-white border-t border-slate-200 flex items-center justify-around text-slate-500 text-xs font-bold">
+                <button class="flex flex-col items-center gap-0.5 text-agri-700">
+                    <i class="fa-solid fa-house text-base"></i>
+                    <span class="text-[10px]">Inicio</span>
+                </button>
+                <button class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-clock-rotate-left text-base"></i>
+                    <span class="text-[10px]">Historial</span>
+                </button>
+                <button class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-book-open text-base"></i>
+                    <span class="text-[10px]">Guía INIA</span>
+                </button>
+            </footer>
+
+        </div>
+    </div>
+
+    <!-- Interactive Scripting -->
+    <script>
+        const mockupData = {
+            sano: {
+                title: "🟢 Fruto Sano y Buen Estado",
+                badge: "Excelente",
+                badgeClass: "bg-agri-100 text-agri-800 border-agri-400",
+                img: "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&fit=crop&w=600&q=80",
+                pcts: { sano: 92, enfermo: 4, nutricion: 4 },
+                advice: "Tu fresa está bien cuidada. Mantén las plantas limpias de hojas secas y cosecha a tiempo."
+            },
+            enfermo: {
+                title: "🔴 Fruto Enfermo / Hongos",
+                badge: "Atención",
+                badgeClass: "bg-fresa-50 text-fresa-700 border-fresa-500",
+                img: "https://images.unsplash.com/photo-1587393855524-087f83d95bc9?auto=format&fit=crop&w=600&q=80",
+                pcts: { sano: 8, enfermo: 84, nutricion: 8 },
+                advice: "1. Retira la fresa afectada para que no contagie a las demás.\n2. No mojes los frutos directamente al regar.\n3. Consulta el remedio recomendado en la guía del INIA."
+            },
+            nutricional: {
+                title: "🟠 Problema de Nutrición / Clima",
+                badge: "Abono / Riego",
+                badgeClass: "bg-amber-100 text-amber-800 border-amber-400",
+                img: "https://images.unsplash.com/photo-1518635017498-87f514b751ba?auto=format&fit=crop&w=600&q=80",
+                pcts: { sano: 10, enfermo: 10, nutricion: 80 },
+                advice: "El fruto muestra falta de nutrientes o estrés por clima. Aplica abono foliar rico en calcio y boro."
+            }
+        };
+
+        function switchCategory(key) {
+            const item = mockupData[key];
+            document.getElementById('activePhoto').src = item.img;
+            document.getElementById('diagTitle').innerText = item.title;
+            
+            const badge = document.getElementById('diagBadge');
+            badge.innerText = item.badge;
+            badge.className = `text-[10px] font-extrabold px-2.5 py-1 rounded-full border ${item.badgeClass}`;
+
+            document.getElementById('diagAdvice').innerText = item.advice;
+
+            // Update Continuous Bar widths
+            document.getElementById('barSano').style.width = item.pcts.sano + '%';
+            document.getElementById('barEnfermo').style.width = item.pcts.enfermo + '%';
+            document.getElementById('barNutricional').style.width = item.pcts.nutricion + '%';
+
+            // Update Legend Values
+            document.getElementById('valSano').innerText = item.pcts.sano + '%';
+            document.getElementById('valEnfermo').innerText = item.pcts.enfermo + '%';
+            document.getElementById('valNutricional').innerText = item.pcts.nutricion + '%';
+        }
+
+        function runDiagnosticAnimation() {
+            const card = document.getElementById('resultCard');
+            card.style.opacity = '0.5';
+            setTimeout(() => {
+                card.style.opacity = '1';
+            }, 300);
+        }
+    </script>
+</body>
+</html>
