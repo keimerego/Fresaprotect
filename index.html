@@ -82,12 +82,8 @@
                 </div>
             </header>
 
-            <!-- Main Content Area -->
-            <main class="p-4 flex-1 flex flex-col gap-3.5">
-
-                <!-- Inputs ocultos reales para activar la cámara trasera o la galería -->
-                <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden" onchange="previewSelectedImage(event)">
-                <input type="file" id="galleryInput" accept="image/*" class="hidden" onchange="previewSelectedImage(event)">
+            <!-- ================= VISTA 1: INICIO (Cámara y Diagnóstico) ================= -->
+            <main id="view-inicio" class="p-4 flex-1 flex flex-col gap-3.5">
 
                 <!-- Helpful Tip Banner -->
                 <div class="bg-blue-50 border-l-4 border-blue-500 text-blue-900 p-3 rounded-xl text-xs flex items-center gap-2.5 shadow-2xs">
@@ -99,25 +95,21 @@
 
                 <!-- Interactive Camera / Photo Area -->
                 <div class="relative bg-slate-900 rounded-2xl overflow-hidden border-2 border-slate-300 shadow-inner min-h-[220px] flex flex-col items-center justify-center">
-                    
                     <img id="activePhoto" src="https://images.unsplash.com/photo-1587393855524-087f83d95bc9?auto=format&fit=crop&w=600&q=80" alt="Fresa de muestra" class="w-full h-[220px] object-cover">
-
                     <div class="absolute bottom-2.5 right-2.5 bg-slate-900/85 backdrop-blur-md text-white text-[10px] px-2.5 py-1 rounded-lg border border-slate-700 flex items-center gap-1.5">
                         <i class="fa-solid fa-camera text-agri-500"></i>
                         <span>Vista de captura</span>
                     </div>
                 </div>
 
-                <!-- Primary Camera / Gallery Buttons (Nativos y corregidos) -->
+                <!-- Primary Camera / Gallery Buttons (Nativos con label) -->
                 <div class="grid grid-cols-2 gap-2">
-                    <!-- Botón Cámara -->
                     <label class="bg-fresa-600 hover:bg-fresa-700 text-white font-bold text-xs py-3 px-3 rounded-xl flex items-center justify-center gap-2 shadow transition active:scale-95 cursor-pointer">
                         <i class="fa-solid fa-camera text-sm"></i>
                         <span>Tomar Foto</span>
                         <input type="file" accept="image/*" capture="environment" class="hidden" onchange="previewSelectedImage(event)">
                     </label>
 
-                    <!-- Botón Galería -->
                     <label class="bg-white text-slate-700 border border-slate-300 hover:bg-slate-100 font-bold text-xs py-3 px-3 rounded-xl flex items-center justify-center gap-2 shadow-2xs transition active:scale-95 cursor-pointer">
                         <i class="fa-solid fa-images text-agri-600 text-sm"></i>
                         <span>Galería</span>
@@ -129,13 +121,13 @@
                 <div class="space-y-1">
                     <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider block">Simular diagnóstico rápido:</span>
                     <div class="grid grid-cols-3 gap-1.5">
-                        <button onclick="switchCategory('sano')" class="bg-white border border-slate-200 text-slate-700 hover:border-agri-500 p-2 rounded-xl text-[11px] font-bold text-center transition">
+                        <button onclick="switchCategory('sano')" class="bg-white border border-slate-200 text-slate-700 hover:border-agri-500 p-2 rounded-xl text-[11px] font-bold text-center transition cursor-pointer">
                             🟢 Fruto Sano
                         </button>
-                        <button onclick="switchCategory('enfermo')" class="bg-white border-2 border-fresa-500 text-fresa-700 p-2 rounded-xl text-[11px] font-bold text-center transition shadow-2xs">
+                        <button onclick="switchCategory('enfermo')" class="bg-white border-2 border-fresa-500 text-fresa-700 p-2 rounded-xl text-[11px] font-bold text-center transition shadow-2xs cursor-pointer">
                             🔴 Hongos
                         </button>
-                        <button onclick="switchCategory('nutricional')" class="bg-white border border-slate-200 text-slate-700 hover:border-amber-500 p-2 rounded-xl text-[11px] font-bold text-center transition">
+                        <button onclick="switchCategory('nutricional')" class="bg-white border border-slate-200 text-slate-700 hover:border-amber-500 p-2 rounded-xl text-[11px] font-bold text-center transition cursor-pointer">
                             🟠 Nutrición
                         </button>
                     </div>
@@ -149,8 +141,6 @@
 
                 <!-- RESULT CARD WITH TRICOLOR CONTINUOUS BAR -->
                 <div id="resultCard" class="bg-white border border-slate-200 rounded-2xl p-4 shadow-md space-y-3">
-                    
-                    <!-- Result Title Header -->
                     <div class="flex items-start justify-between pb-2 border-b border-slate-100">
                         <div>
                             <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block">Diagnóstico Principal</span>
@@ -169,28 +159,15 @@
                                 Porcentaje de Coincidencia (100%)
                             </span>
                         </div>
-
-                        <!-- Single Continuous Segmented Bar -->
                         <div class="w-full bg-slate-200 rounded-full h-4 overflow-hidden flex shadow-inner border border-slate-300">
-                            <div id="barSano" class="bg-agri-500 h-full transition-all duration-700 ease-out flex items-center justify-center text-[9px] font-extrabold text-white" style="width: 8%;"></div>
-                            <div id="barEnfermo" class="bg-fresa-600 h-full transition-all duration-700 ease-out flex items-center justify-center text-[9px] font-extrabold text-white" style="width: 84%;"></div>
-                            <div id="barNutricional" class="bg-amber-500 h-full transition-all duration-700 ease-out flex items-center justify-center text-[9px] font-extrabold text-white" style="width: 8%;"></div>
+                            <div id="barSano" class="bg-agri-500 h-full transition-all duration-700 ease-out" style="width: 8%;"></div>
+                            <div id="barEnfermo" class="bg-fresa-600 h-full transition-all duration-700 ease-out" style="width: 84%;"></div>
+                            <div id="barNutricional" class="bg-amber-500 h-full transition-all duration-700 ease-out" style="width: 8%;"></div>
                         </div>
-
-                        <!-- Bar Legend Underneath -->
                         <div class="grid grid-cols-3 gap-1 pt-1 text-[10px] font-bold text-slate-600 text-center">
-                            <div class="flex items-center justify-center gap-1">
-                                <span class="w-2.5 h-2.5 rounded-full bg-agri-500 inline-block"></span>
-                                <span>Sano: <strong id="valSano" class="text-agri-700">8%</strong></span>
-                            </div>
-                            <div class="flex items-center justify-center gap-1">
-                                <span class="w-2.5 h-2.5 rounded-full bg-fresa-600 inline-block"></span>
-                                <span>Hongos: <strong id="valEnfermo" class="text-fresa-700">84%</strong></span>
-                            </div>
-                            <div class="flex items-center justify-center gap-1">
-                                <span class="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block"></span>
-                                <span>Nutrición: <strong id="valNutricional" class="text-amber-700">8%</strong></span>
-                            </div>
+                            <div>Sano: <strong id="valSano" class="text-agri-700">8%</strong></div>
+                            <div>Hongos: <strong id="valEnfermo" class="text-fresa-700">84%</strong></div>
+                            <div>Nutrición: <strong id="valNutricional" class="text-amber-700">8%</strong></div>
                         </div>
                     </div>
 
@@ -206,22 +183,103 @@
                             3. Aplica el producto biológico recomendado por tu asesor técnico por la tarde.
                         </p>
                     </div>
-
                 </div>
 
             </main>
 
+            <!-- ================= VISTA 2: HISTORIAL ================= -->
+            <div id="view-historial" class="p-4 flex-1 flex flex-col gap-3.5 hidden">
+                <div class="flex items-center justify-between">
+                    <h2 class="font-display font-bold text-lg text-slate-900">Historial de Campo</h2>
+                    <span class="text-[10px] bg-agri-100 text-agri-800 font-extrabold px-2 py-0.5 rounded-full border border-agri-300">Últimos análisis</span>
+                </div>
+                <p class="text-xs text-slate-500">Aquí se registrarán todas las evaluaciones fotográficas realizadas en tus parcelas.</p>
+
+                <div class="space-y-2.5 mt-1">
+                    <div class="bg-white border border-slate-200 rounded-xl p-3 flex items-center justify-between shadow-2xs">
+                        <div class="flex items-center gap-3">
+                            <img src="https://images.unsplash.com/photo-1587393855524-087f83d95bc9?auto=format&fit=crop&w=150&q=80" class="w-12 h-12 object-cover rounded-lg border border-slate-200">
+                            <div>
+                                <h4 class="text-xs font-bold text-slate-800">Botrytis cinerea</h4>
+                                <p class="text-[10px] text-slate-400">Hoy, 10:15 AM - Lote Principal</p>
+                            </div>
+                        </div>
+                        <span class="text-[10px] font-extrabold px-2 py-1 rounded-full bg-fresa-50 text-fresa-700 border border-fresa-500">84%</span>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 rounded-xl p-3 flex items-center justify-between shadow-2xs">
+                        <div class="flex items-center gap-3">
+                            <img src="https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&fit=crop&w=150&q=80" class="w-12 h-12 object-cover rounded-lg border border-slate-200">
+                            <div>
+                                <h4 class="text-xs font-bold text-slate-800">Fruto Sano</h4>
+                                <p class="text-[10px] text-slate-400">Ayer, 4:20 PM - Parcela Norte</p>
+                            </div>
+                        </div>
+                        <span class="text-[10px] font-extrabold px-2 py-1 rounded-full bg-agri-50 text-agri-700 border border-agri-400">92%</span>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 rounded-xl p-3 flex items-center justify-between shadow-2xs">
+                        <div class="flex items-center gap-3">
+                            <img src="https://images.unsplash.com/photo-1518635017498-87f514b751ba?auto=format&fit=crop&w=150&q=80" class="w-12 h-12 object-cover rounded-lg border border-slate-200">
+                            <div>
+                                <h4 class="text-xs font-bold text-slate-800">Deficiencia Nutricional</h4>
+                                <p class="text-[10px] text-slate-400">Hace 3 días - Sector B</p>
+                            </div>
+                        </div>
+                        <span class="text-[10px] font-extrabold px-2 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-400">80%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= VISTA 3: GUÍA INIA ================= -->
+            <div id="view-guia" class="p-4 flex-1 flex flex-col gap-3.5 hidden">
+                <div class="flex items-center justify-between">
+                    <h2 class="font-display font-bold text-lg text-slate-900">Guía Técnica INIA</h2>
+                    <span class="text-[10px] bg-blue-100 text-blue-800 font-extrabold px-2 py-0.5 rounded-full border border-blue-300">Fitosanidad</span>
+                </div>
+                <p class="text-xs text-slate-500">Recomendaciones oficiales para el manejo integrado de plagas y enfermedades en fresa.</p>
+
+                <div class="space-y-3 mt-1">
+                    <div class="bg-white border border-slate-200 rounded-xl p-3 space-y-1.5 shadow-2xs">
+                        <h3 class="text-xs font-extrabold text-fresa-700 flex items-center gap-1.5">
+                            <i class="fa-solid fa-triangle-exclamation"></i> Podredumbre Gris (Botrytis)
+                        </h3>
+                        <p class="text-[11px] text-slate-600 leading-relaxed">
+                            Prolifera con alta humedad ambiental (>85%) y temperaturas templadas. Se previene espaciando los riegos por goteo y eliminando frutos mummificados.
+                        </p>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 rounded-xl p-3 space-y-1.5 shadow-2xs">
+                        <h3 class="text-xs font-extrabold text-amber-700 flex items-center gap-1.5">
+                            <i class="fa-solid fa-triangle-exclamation"></i> Oídio o Cenicilla
+                        </h3>
+                        <p class="text-[11px] text-slate-600 leading-relaxed">
+                            Aparición de polvo blanco en hojas y frutos. Controlar mediante aplicaciones preventivas de azufre mojable en las horas de menor radiación solar.
+                        </p>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 rounded-xl p-3 space-y-1.5 shadow-2xs">
+                        <h3 class="text-xs font-extrabold text-agri-700 flex items-center gap-1.5">
+                            <i class="fa-solid fa-circle-check"></i> Nutrición y Calcio
+                        </h3>
+                        <p class="text-[11px] text-slate-600 leading-relaxed">
+                            Aplicaciones oportunas de nitrato de calcio y boro aseguran la firmeza de la epidermis del fruto, evitando daños mecánicos y prolongando la vida post-cosecha.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
             <!-- App Footer Navigation -->
-            <footer class="p-3 bg-white border-t border-slate-200 flex items-center justify-around text-slate-500 text-xs font-bold">
-                <button class="flex flex-col items-center gap-0.5 text-agri-700">
+            <footer class="p-3 bg-white border-t border-slate-200 flex items-center justify-around text-xs font-bold">
+                <button onclick="switchTab('inicio')" id="navInicio" class="flex flex-col items-center gap-0.5 text-agri-700 transition cursor-pointer">
                     <i class="fa-solid fa-house text-base"></i>
                     <span class="text-[10px]">Inicio</span>
                 </button>
-                <button class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-600">
+                <button onclick="switchTab('historial')" id="navHistorial" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-600 transition cursor-pointer">
                     <i class="fa-solid fa-clock-rotate-left text-base"></i>
                     <span class="text-[10px]">Historial</span>
                 </button>
-                <button class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-600">
+                <button onclick="switchTab('guia')" id="navGuia" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-600 transition cursor-pointer">
                     <i class="fa-solid fa-book-open text-base"></i>
                     <span class="text-[10px]">Guía INIA</span>
                 </button>
@@ -230,7 +288,7 @@
         </div>
     </div>
 
-    <!-- Scripting de Funcionalidad y Cámara -->
+    <!-- Scripting de Funcionalidad y Navegación -->
     <script>
         const mockupData = {
             sano: {
@@ -247,7 +305,7 @@
                 badgeClass: "bg-fresa-50 text-fresa-700 border-fresa-500",
                 img: "https://images.unsplash.com/photo-1587393855524-087f83d95bc9?auto=format&fit=crop&w=600&q=80",
                 pcts: { sano: 8, enfermo: 84, nutricion: 8 },
-                advice: "1. Retira la fresa afectada para que no contagie a las demás.\n2. No mojes los frutos directamente al regار.\n3. Consulta el remedio recomendado en la guía del INIA."
+                advice: "1. Retira la fresa afectada para que no contagie a las demás.\n2. No mojes los frutos directamente al regar.\n3. Consulta el remedio recomendado en la guía del INIA."
             },
             nutricional: {
                 title: "🟠 Problema de Nutrición / Clima",
@@ -279,7 +337,7 @@
             document.getElementById('valNutricional').innerText = item.pcts.nutricion + '%';
         }
 
-        // Función para capturar foto real con la cámara del celular y mostrarla en pantalla
+        // Función para capturar foto real con la cámara del celular
         function previewSelectedImage(event) {
             const file = event.target.files[0];
             if (file) {
@@ -297,6 +355,28 @@
             setTimeout(() => {
                 card.style.opacity = '1';
             }, 300);
+        }
+
+        // Navegación fluida entre pantallas (Inicio, Historial, Guía INIA)
+        function switchTab(tab) {
+            document.getElementById('view-inicio').classList.add('hidden');
+            document.getElementById('view-historial').classList.add('hidden');
+            document.getElementById('view-guia').classList.add('hidden');
+
+            document.getElementById('navInicio').className = "flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-600 transition cursor-pointer";
+            document.getElementById('navHistorial').className = "flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-600 transition cursor-pointer";
+            document.getElementById('navGuia').className = "flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-600 transition cursor-pointer";
+
+            if (tab === 'inicio') {
+                document.getElementById('view-inicio').classList.remove('hidden');
+                document.getElementById('navInicio').className = "flex flex-col items-center gap-0.5 text-agri-700 transition cursor-pointer";
+            } else if (tab === 'historial') {
+                document.getElementById('view-historial').classList.remove('hidden');
+                document.getElementById('navHistorial').className = "flex flex-col items-center gap-0.5 text-agri-700 transition cursor-pointer";
+            } else if (tab === 'guia') {
+                document.getElementById('view-guia').classList.remove('hidden');
+                document.getElementById('navGuia').className = "flex flex-col items-center gap-0.5 text-agri-700 transition cursor-pointer";
+            }
         }
     </script>
 </body>
