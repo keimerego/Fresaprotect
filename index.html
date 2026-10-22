@@ -108,16 +108,21 @@
                     </div>
                 </div>
 
-                <!-- Primary Camera / Gallery Buttons (Conectados a la cámara real) -->
+                <!-- Primary Camera / Gallery Buttons (Nativos y corregidos) -->
                 <div class="grid grid-cols-2 gap-2">
-                    <button onclick="document.getElementById('cameraInput').click()" class="bg-fresa-600 hover:bg-fresa-700 text-white font-bold text-xs py-3 px-3 rounded-xl flex items-center justify-center gap-2 shadow transition active:scale-95 cursor-pointer">
+                    <!-- Botón Cámara -->
+                    <label class="bg-fresa-600 hover:bg-fresa-700 text-white font-bold text-xs py-3 px-3 rounded-xl flex items-center justify-center gap-2 shadow transition active:scale-95 cursor-pointer">
                         <i class="fa-solid fa-camera text-sm"></i>
                         <span>Tomar Foto</span>
-                    </button>
-                    <button onclick="document.getElementById('galleryInput').click()" class="bg-white text-slate-700 border border-slate-300 hover:bg-slate-100 font-bold text-xs py-3 px-3 rounded-xl flex items-center justify-center gap-2 shadow-2xs transition active:scale-95 cursor-pointer">
+                        <input type="file" accept="image/*" capture="environment" class="hidden" onchange="previewSelectedImage(event)">
+                    </label>
+
+                    <!-- Botón Galería -->
+                    <label class="bg-white text-slate-700 border border-slate-300 hover:bg-slate-100 font-bold text-xs py-3 px-3 rounded-xl flex items-center justify-center gap-2 shadow-2xs transition active:scale-95 cursor-pointer">
                         <i class="fa-solid fa-images text-agri-600 text-sm"></i>
                         <span>Galería</span>
-                    </button>
+                        <input type="file" accept="image/*" class="hidden" onchange="previewSelectedImage(event)">
+                    </label>
                 </div>
 
                 <!-- Quick Category Switchers (Simula diagnóstico para pruebas) -->
