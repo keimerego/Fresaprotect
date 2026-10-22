@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <link rel="manifest" href="manifest.json">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FresaProtect - Interface Visual Mockup</title>
+    <title>FresaProtect - Diagnóstico Agrícola</title>
+    <!-- PWA Manifest Link -->
+    <link rel="manifest" href="manifest.json">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -47,16 +48,9 @@
             background: #cbd5e1;
             border-radius: 10px;
         }
-        @keyframes pulseGlow {
-            0%, 100% { opacity: 0.8; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.02); }
-        }
-        .pulse-active {
-            animation: pulseGlow 2.5s infinite ease-in-out;
-        }
     </style>
 </head>
-<body class="bg-slate-900 text-slate-800 font-sans min-h-screen flex items-center justify-center p-3 sm:p-6">
+<body class="bg-slate-900 text-slate-800 font-sans min-h-screen flex items-center justify-center p-2 sm:p-4">
 
     <!-- Mobile Device Frame Container -->
     <div class="w-full max-w-[410px] bg-slate-950 rounded-[44px] p-3.5 shadow-2xl border-4 border-slate-800 relative">
@@ -91,6 +85,10 @@
             <!-- Main Content Area -->
             <main class="p-4 flex-1 flex flex-col gap-3.5">
 
+                <!-- Inputs ocultos reales para activar la cámara trasera o la galería -->
+                <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden" onchange="previewSelectedImage(event)">
+                <input type="file" id="galleryInput" accept="image/*" class="hidden" onchange="previewSelectedImage(event)">
+
                 <!-- Helpful Tip Banner -->
                 <div class="bg-blue-50 border-l-4 border-blue-500 text-blue-900 p-3 rounded-xl text-xs flex items-center gap-2.5 shadow-2xs">
                     <i class="fa-solid fa-circle-info text-blue-500 text-base"></i>
@@ -104,30 +102,25 @@
                     
                     <img id="activePhoto" src="https://images.unsplash.com/photo-1587393855524-087f83d95bc9?auto=format&fit=crop&w=600&q=80" alt="Fresa de muestra" class="w-full h-[220px] object-cover">
 
-                    <div id="photoPlaceholder" class="hidden text-center p-6 flex-col items-center justify-center">
-                        <i class="fa-solid fa-camera text-4xl text-slate-400 mb-2"></i>
-                        <p class="text-slate-200 font-bold text-sm">Toma una foto de tu fresa</p>
-                    </div>
-
                     <div class="absolute bottom-2.5 right-2.5 bg-slate-900/85 backdrop-blur-md text-white text-[10px] px-2.5 py-1 rounded-lg border border-slate-700 flex items-center gap-1.5">
-                        <i class="fa-solid fa-expand text-agri-500"></i>
-                        <span>Vista enfocada</span>
+                        <i class="fa-solid fa-camera text-agri-500"></i>
+                        <span>Vista de captura</span>
                     </div>
                 </div>
 
-                <!-- Primary Camera / Gallery Buttons -->
+                <!-- Primary Camera / Gallery Buttons (Conectados a la cámara real) -->
                 <div class="grid grid-cols-2 gap-2">
-                    <button onclick="switchCategory('enfermo')" class="bg-fresa-600 hover:bg-fresa-700 text-white font-bold text-xs py-3 px-3 rounded-xl flex items-center justify-center gap-2 shadow transition active:scale-95">
+                    <button onclick="document.getElementById('cameraInput').click()" class="bg-fresa-600 hover:bg-fresa-700 text-white font-bold text-xs py-3 px-3 rounded-xl flex items-center justify-center gap-2 shadow transition active:scale-95 cursor-pointer">
                         <i class="fa-solid fa-camera text-sm"></i>
                         <span>Tomar Foto</span>
                     </button>
-                    <button onclick="switchCategory('sano')" class="bg-white text-slate-700 border border-slate-300 hover:bg-slate-100 font-bold text-xs py-3 px-3 rounded-xl flex items-center justify-center gap-2 shadow-2xs transition active:scale-95">
+                    <button onclick="document.getElementById('galleryInput').click()" class="bg-white text-slate-700 border border-slate-300 hover:bg-slate-100 font-bold text-xs py-3 px-3 rounded-xl flex items-center justify-center gap-2 shadow-2xs transition active:scale-95 cursor-pointer">
                         <i class="fa-solid fa-images text-agri-600 text-sm"></i>
                         <span>Galería</span>
                     </button>
                 </div>
 
-                <!-- Quick Category Switchers (Simulates test diagnosis) -->
+                <!-- Quick Category Switchers (Simula diagnóstico para pruebas) -->
                 <div class="space-y-1">
                     <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider block">Simular diagnóstico rápido:</span>
                     <div class="grid grid-cols-3 gap-1.5">
@@ -144,9 +137,9 @@
                 </div>
 
                 <!-- Main Action Button -->
-                <button onclick="runDiagnosticAnimation()" class="w-full bg-agri-600 hover:bg-agri-700 text-white font-extrabold text-sm py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 shadow-lg transition active:scale-98">
+                <button onclick="runDiagnosticAnimation()" class="w-full bg-agri-600 hover:bg-agri-700 text-white font-extrabold text-sm py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 shadow-lg transition active:scale-98 cursor-pointer">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    <span>🔍 Revisar mi fresa</span>
+                    <span>🔍 Analizar fresa</span>
                 </button>
 
                 <!-- RESULT CARD WITH TRICOLOR CONTINUOUS BAR -->
@@ -174,15 +167,9 @@
 
                         <!-- Single Continuous Segmented Bar -->
                         <div class="w-full bg-slate-200 rounded-full h-4 overflow-hidden flex shadow-inner border border-slate-300">
-                            <!-- Green Segment (Sano) -->
-                            <div id="barSano" class="bg-agri-500 h-full transition-all duration-700 ease-out flex items-center justify-center text-[9px] font-extrabold text-white" style="width: 8%;">
-                            </div>
-                            <!-- Red Segment (Enfermo) -->
-                            <div id="barEnfermo" class="bg-fresa-600 h-full transition-all duration-700 ease-out flex items-center justify-center text-[9px] font-extrabold text-white" style="width: 84%;">
-                            </div>
-                            <!-- Amber Segment (Nutricional) -->
-                            <div id="barNutricional" class="bg-amber-500 h-full transition-all duration-700 ease-out flex items-center justify-center text-[9px] font-extrabold text-white" style="width: 8%;">
-                            </div>
+                            <div id="barSano" class="bg-agri-500 h-full transition-all duration-700 ease-out flex items-center justify-center text-[9px] font-extrabold text-white" style="width: 8%;"></div>
+                            <div id="barEnfermo" class="bg-fresa-600 h-full transition-all duration-700 ease-out flex items-center justify-center text-[9px] font-extrabold text-white" style="width: 84%;"></div>
+                            <div id="barNutricional" class="bg-amber-500 h-full transition-all duration-700 ease-out flex items-center justify-center text-[9px] font-extrabold text-white" style="width: 8%;"></div>
                         </div>
 
                         <!-- Bar Legend Underneath -->
@@ -238,7 +225,7 @@
         </div>
     </div>
 
-    <!-- Interactive Scripting -->
+    <!-- Scripting de Funcionalidad y Cámara -->
     <script>
         const mockupData = {
             sano: {
@@ -255,7 +242,7 @@
                 badgeClass: "bg-fresa-50 text-fresa-700 border-fresa-500",
                 img: "https://images.unsplash.com/photo-1587393855524-087f83d95bc9?auto=format&fit=crop&w=600&q=80",
                 pcts: { sano: 8, enfermo: 84, nutricion: 8 },
-                advice: "1. Retira la fresa afectada para que no contagie a las demás.\n2. No mojes los frutos directamente al regar.\n3. Consulta el remedio recomendado en la guía del INIA."
+                advice: "1. Retira la fresa afectada para que no contagie a las demás.\n2. No mojes los frutos directamente al regار.\n3. Consulta el remedio recomendado en la guía del INIA."
             },
             nutricional: {
                 title: "🟠 Problema de Nutrición / Clima",
@@ -278,20 +265,30 @@
 
             document.getElementById('diagAdvice').innerText = item.advice;
 
-            // Update Continuous Bar widths
             document.getElementById('barSano').style.width = item.pcts.sano + '%';
             document.getElementById('barEnfermo').style.width = item.pcts.enfermo + '%';
             document.getElementById('barNutricional').style.width = item.pcts.nutricion + '%';
 
-            // Update Legend Values
             document.getElementById('valSano').innerText = item.pcts.sano + '%';
             document.getElementById('valEnfermo').innerText = item.pcts.enfermo + '%';
             document.getElementById('valNutricional').innerText = item.pcts.nutricion + '%';
         }
 
+        // Función para capturar foto real con la cámara del celular y mostrarla en pantalla
+        function previewSelectedImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('activePhoto').src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
         function runDiagnosticAnimation() {
             const card = document.getElementById('resultCard');
-            card.style.opacity = '0.5';
+            card.style.opacity = '0.4';
             setTimeout(() => {
                 card.style.opacity = '1';
             }, 300);
