@@ -12,6 +12,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- TensorFlow.js y Teachable Machine Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+
     <script>
         tailwind.config = {
             theme: {
@@ -77,8 +82,8 @@
                         <p class="text-[11px] text-agri-100 font-medium mt-0.5">Diagnóstico fácil para el campo</p>
                     </div>
                 </div>
-                <div class="bg-agri-800/80 text-agri-100 px-2.5 py-1 rounded-full text-[10px] font-bold border border-agri-600">
-                    Modo Campo 📶
+                <div id="modelStatus" class="bg-agri-800/80 text-agri-100 px-2.5 py-1 rounded-full text-[10px] font-bold border border-agri-600 flex items-center gap-1">
+                    <span>Modo Campo</span> 📶
                 </div>
             </header>
 
@@ -117,41 +122,38 @@
                     </label>
                 </div>
 
-                <!-- Quick Category Switchers (Simula diagnóstico para pruebas) -->
+                <!-- Quick Category Switchers (Actualizado a Sano y Botrytis) -->
                 <div class="space-y-1">
                     <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider block">Simular diagnóstico rápido:</span>
-                    <div class="grid grid-cols-3 gap-1.5">
-                        <button onclick="switchCategory('sano')" class="bg-white border border-slate-200 text-slate-700 hover:border-agri-500 p-2 rounded-xl text-[11px] font-bold text-center transition cursor-pointer">
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="switchCategory('sano')" class="bg-white border border-slate-200 text-slate-700 hover:border-agri-500 p-2.5 rounded-xl text-xs font-bold text-center transition cursor-pointer">
                             🟢 Fruto Sano
                         </button>
-                        <button onclick="switchCategory('enfermo')" class="bg-white border-2 border-fresa-500 text-fresa-700 p-2 rounded-xl text-[11px] font-bold text-center transition shadow-2xs cursor-pointer">
-                            🔴 Hongos
-                        </button>
-                        <button onclick="switchCategory('nutricional')" class="bg-white border border-slate-200 text-slate-700 hover:border-amber-500 p-2 rounded-xl text-[11px] font-bold text-center transition cursor-pointer">
-                            🟠 Nutrición
+                        <button onclick="switchCategory('botrytis')" class="bg-white border-2 border-fresa-500 text-fresa-700 p-2.5 rounded-xl text-xs font-bold text-center transition shadow-2xs cursor-pointer">
+                            🔴 Botrytis (Hongos)
                         </button>
                     </div>
                 </div>
 
                 <!-- Main Action Button -->
-                <button onclick="runDiagnosticAnimation()" class="w-full bg-agri-600 hover:bg-agri-700 text-white font-extrabold text-sm py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 shadow-lg transition active:scale-98 cursor-pointer">
+                <button onclick="analizarConIA()" class="w-full bg-agri-600 hover:bg-agri-700 text-white font-extrabold text-sm py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 shadow-lg transition active:scale-98 cursor-pointer">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    <span>🔍 Analizar fresa</span>
+                    <span id="btnText">🔍 Analizar fresa</span>
                 </button>
 
-                <!-- RESULT CARD WITH TRICOLOR CONTINUOUS BAR -->
+                <!-- RESULT CARD WITH 2-WAY PERCENTAGE BAR -->
                 <div id="resultCard" class="bg-white border border-slate-200 rounded-2xl p-4 shadow-md space-y-3">
                     <div class="flex items-start justify-between pb-2 border-b border-slate-100">
                         <div>
                             <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block">Diagnóstico Principal</span>
-                            <h3 id="diagTitle" class="text-base font-extrabold text-slate-900 mt-0.5">🔴 Fruto Enfermo / Hongos</h3>
+                            <h3 id="diagTitle" class="text-base font-extrabold text-slate-900 mt-0.5">🔴 Fruto con Botrytis</h3>
                         </div>
                         <span id="diagBadge" class="text-[10px] font-extrabold px-2.5 py-1 rounded-full bg-fresa-50 text-fresa-700 border border-fresa-500">
                             Atención
                         </span>
                     </div>
 
-                    <!-- CONTINUOUS TRICOLOR PERCENTAGE BAR SECTION -->
+                    <!-- PERCENTAGE BAR SECTION (2 CLASSES) -->
                     <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-2">
                         <div class="flex items-center justify-between text-xs font-bold text-slate-700">
                             <span class="flex items-center gap-1">
@@ -160,14 +162,12 @@
                             </span>
                         </div>
                         <div class="w-full bg-slate-200 rounded-full h-4 overflow-hidden flex shadow-inner border border-slate-300">
-                            <div id="barSano" class="bg-agri-500 h-full transition-all duration-700 ease-out" style="width: 8%;"></div>
-                            <div id="barEnfermo" class="bg-fresa-600 h-full transition-all duration-700 ease-out" style="width: 84%;"></div>
-                            <div id="barNutricional" class="bg-amber-500 h-full transition-all duration-700 ease-out" style="width: 8%;"></div>
+                            <div id="barSano" class="bg-agri-500 h-full transition-all duration-700 ease-out" style="width: 10%;"></div>
+                            <div id="barBotrytis" class="bg-fresa-600 h-full transition-all duration-700 ease-out" style="width: 90%;"></div>
                         </div>
-                        <div class="grid grid-cols-3 gap-1 pt-1 text-[10px] font-bold text-slate-600 text-center">
-                            <div>Sano: <strong id="valSano" class="text-agri-700">8%</strong></div>
-                            <div>Hongos: <strong id="valEnfermo" class="text-fresa-700">84%</strong></div>
-                            <div>Nutrición: <strong id="valNutricional" class="text-amber-700">8%</strong></div>
+                        <div class="grid grid-cols-2 gap-1 pt-1 text-xs font-bold text-slate-600 text-center">
+                            <div>Sano: <strong id="valSano" class="text-agri-700">10%</strong></div>
+                            <div>Botrytis: <strong id="valBotrytis" class="text-fresa-700">90%</strong></div>
                         </div>
                     </div>
 
@@ -180,7 +180,7 @@
                         <p id="diagAdvice" class="text-emerald-950 font-medium leading-relaxed">
                             1. Retira las fresas infectadas con cuidado.<br>
                             2. Evita encharcar las plantas al regar.<br>
-                            3. Aplica el producto biológico recomendado por tu asesor técnico por la tarde.
+                            3. Aplica el producto biológico o preventivo recomendado por el INIA.
                         </p>
                     </div>
                 </div>
@@ -204,7 +204,7 @@
                                 <p class="text-[10px] text-slate-400">Hoy, 10:15 AM - Lote Principal</p>
                             </div>
                         </div>
-                        <span class="text-[10px] font-extrabold px-2 py-1 rounded-full bg-fresa-50 text-fresa-700 border border-fresa-500">84%</span>
+                        <span class="text-[10px] font-extrabold px-2 py-1 rounded-full bg-fresa-50 text-fresa-700 border border-fresa-500">90%</span>
                     </div>
 
                     <div class="bg-white border border-slate-200 rounded-xl p-3 flex items-center justify-between shadow-2xs">
@@ -215,55 +215,61 @@
                                 <p class="text-[10px] text-slate-400">Ayer, 4:20 PM - Parcela Norte</p>
                             </div>
                         </div>
-                        <span class="text-[10px] font-extrabold px-2 py-1 rounded-full bg-agri-50 text-agri-700 border border-agri-400">92%</span>
-                    </div>
-
-                    <div class="bg-white border border-slate-200 rounded-xl p-3 flex items-center justify-between shadow-2xs">
-                        <div class="flex items-center gap-3">
-                            <img src="https://images.unsplash.com/photo-1518635017498-87f514b751ba?auto=format&fit=crop&w=150&q=80" class="w-12 h-12 object-cover rounded-lg border border-slate-200">
-                            <div>
-                                <h4 class="text-xs font-bold text-slate-800">Deficiencia Nutricional</h4>
-                                <p class="text-[10px] text-slate-400">Hace 3 días - Sector B</p>
-                            </div>
-                        </div>
-                        <span class="text-[10px] font-extrabold px-2 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-400">80%</span>
+                        <span class="text-[10px] font-extrabold px-2 py-1 rounded-full bg-agri-50 text-agri-700 border border-agri-400">95%</span>
                     </div>
                 </div>
             </div>
 
-            <!-- ================= VISTA 3: GUÍA INIA ================= -->
+            <!-- ================= VISTA 3: GUÍA INIA (AMPLIADA) ================= -->
             <div id="view-guia" class="p-4 flex-1 flex flex-col gap-3.5 hidden">
                 <div class="flex items-center justify-between">
                     <h2 class="font-display font-bold text-lg text-slate-900">Guía Técnica INIA</h2>
                     <span class="text-[10px] bg-blue-100 text-blue-800 font-extrabold px-2 py-0.5 rounded-full border border-blue-300">Fitosanidad</span>
                 </div>
-                <p class="text-xs text-slate-500">Recomendaciones oficiales para el manejo integrado de plagas y enfermedades en fresa.</p>
+                <p class="text-xs text-slate-500">Recomendaciones oficiales del manual del INIA para el manejo integrado de enfermedades en fresa.</p>
 
                 <div class="space-y-3 mt-1">
+                    <!-- 1. Botrytis -->
                     <div class="bg-white border border-slate-200 rounded-xl p-3 space-y-1.5 shadow-2xs">
                         <h3 class="text-xs font-extrabold text-fresa-700 flex items-center gap-1.5">
-                            <i class="fa-solid fa-triangle-exclamation"></i> Podredumbre Gris (Botrytis)
+                            <i class="fa-solid fa-triangle-exclamation"></i> 1. Podredumbre Gris (Botrytis cinerea)
                         </h3>
                         <p class="text-[11px] text-slate-600 leading-relaxed">
-                            Prolifera con alta humedad ambiental (>85%) y temperaturas templadas. Se previene espaciando los riegos por goteo y eliminando frutos mummificados.
+                            <strong>Condiciones:</strong> Prolifera con alta humedad relativa (>85%) y temperaturas templadas de 15°C a 20°C[cite: 59]. Ataca flores, botones florales y frutos con un característico micelio grisáceo[cite: 59].<br>
+                            <strong>Manejo Integrado:</strong> Controlar los riegos para evitar exceso de humedad, eliminar frutos momificados en campo y realizar aplicaciones preventivas con mancozeb o curativas con iprodione o pirimetanil[cite: 59]. Uso de control biológico con <i>Gliocladium roseum</i>[cite: 59].
                         </p>
                     </div>
 
+                    <!-- 2. Oídio -->
                     <div class="bg-white border border-slate-200 rounded-xl p-3 space-y-1.5 shadow-2xs">
                         <h3 class="text-xs font-extrabold text-amber-700 flex items-center gap-1.5">
-                            <i class="fa-solid fa-triangle-exclamation"></i> Oídio o Cenicilla
+                            <i class="fa-solid fa-triangle-exclamation"></i> 2. Oídio o Cenicilla (Sphaerotheca macularis)
                         </h3>
                         <p class="text-[11px] text-slate-600 leading-relaxed">
-                            Aparición de polvo blanco en hojas y frutos. Controlar mediante aplicaciones preventivas de azufre mojable en las horas de menor radiación solar.
+                            <strong>Condiciones:</strong> Se manifiesta como una pelusa blanquecina en el envés de las hojas y frutos, encrespándolas en forma de copa[cite: 59]. Prefiere temperaturas de 20°C a 25°C y tiempo soleado[cite: 59].<br>
+                            <strong>Manejo Integrado:</strong> Control preventivo inicial con azufre en polvo o micronizado (que también ayuda contra ácaros). En ataques severos, usar fungicidas sistémicos como penconazol o myclobutanil[cite: 59].
                         </p>
                     </div>
 
+                    <!-- 3. Pudrición de corona -->
                     <div class="bg-white border border-slate-200 rounded-xl p-3 space-y-1.5 shadow-2xs">
-                        <h3 class="text-xs font-extrabold text-agri-700 flex items-center gap-1.5">
-                            <i class="fa-solid fa-circle-check"></i> Nutrición y Calcio
+                        <h3 class="text-xs font-extrabold text-red-800 flex items-center gap-1.5">
+                            <i class="fa-solid fa-triangle-exclamation"></i> 3. Pudrición de Corona (Phytophthora cactorum)
                         </h3>
                         <p class="text-[11px] text-slate-600 leading-relaxed">
-                            Aplicaciones oportunas de nitrato de calcio y boro aseguran la firmeza de la epidermis del fruto, evitando daños mecánicos y prolongando la vida post-cosecha.
+                            <strong>Condiciones:</strong> Afecta suelos con mal drenaje y encharcamientos[cite: 59, 60]. Produce coloración rojiza en pecíolos y necrosis marrón oscura en el centro de la corona provocando la muerte de la planta[cite: 59, 60].<br>
+                            <strong>Manejo Integrado:</strong> Mantener excelente drenaje, utilizar material de siembra con sanidad comprobada y aplicar fosfito de potasio o fungicidas cúpricos[cite: 60].
+                        </p>
+                    </div>
+
+                    <!-- 4. Mancha foliar -->
+                    <div class="bg-white border border-slate-200 rounded-xl p-3 space-y-1.5 shadow-2xs">
+                        <h3 class="text-xs font-extrabold text-agri-700 flex items-center gap-1.5">
+                            <i class="fa-solid fa-book-medical"></i> 4. Mancha Foliar (Mycosphaerella fragariae)
+                        </h3>
+                        <p class="text-[11px] text-slate-600 leading-relaxed">
+                            <strong>Condiciones:</strong> Produce manchas circulares grises con bordes de color rojo a púrpura en hojas y pecíolos, reduciendo la capacidad fotosintética[cite: 60].<br>
+                            <strong>Manejo Integrado:</strong> Realizar podas sanitarias eliminando hojas viejas afectadas y aplicar protectores a base de cobre, mancozeb o captan[cite: 60].
                         </p>
                     </div>
                 </div>
@@ -288,32 +294,48 @@
         </div>
     </div>
 
-    <!-- Scripting de Funcionalidad y Navegación -->
+    <!-- Scripting de Funcionalidad, Navegación e Integración de IA (2 Clases) -->
     <script>
+        // PEGA AQUÍ EL LINK DE TU MODELO EXPORTADO DESDE TEACHABLE MACHINE
+        const URL_MODELO = "https://teachablemachine.withgoogle.com/models/TU_MODELO_AQUI/";
+
+        let model, maxPredictions;
+        let isModelLoaded = false;
+
+        async function loadModel() {
+            try {
+                const modelURL = URL_MODELO + "model.json";
+                const metadataURL = URL_MODELO + "metadata.json";
+                model = await tmImage.load(modelURL, metadataURL);
+                maxPredictions = model.getTotalClasses();
+                isModelLoaded = true;
+                
+                const statusBadge = document.getElementById('modelStatus');
+                statusBadge.innerHTML = '<span>IA Lista</span> 🤖';
+                statusBadge.className = 'bg-emerald-600 text-white px-2.5 py-1 rounded-full text-[10px] font-bold flex items-center gap-1';
+            } catch (error) {
+                console.log("Servicio ejecutando simulador o esperando URL válida de Teachable Machine.");
+            }
+        }
+
+        window.addEventListener('load', loadModel);
+
         const mockupData = {
             sano: {
                 title: "🟢 Fruto Sano y Buen Estado",
                 badge: "Excelente",
                 badgeClass: "bg-agri-100 text-agri-800 border-agri-400",
                 img: "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&fit=crop&w=600&q=80",
-                pcts: { sano: 92, enfermo: 4, nutricion: 4 },
+                pcts: { sano: 95, botrytis: 5 },
                 advice: "Tu fresa está bien cuidada. Mantén las plantas limpias de hojas secas y cosecha a tiempo."
             },
-            enfermo: {
-                title: "🔴 Fruto Enfermo / Hongos",
+            botrytis: {
+                title: "🔴 Fruto con Botrytis (Hongos)",
                 badge: "Atención",
                 badgeClass: "bg-fresa-50 text-fresa-700 border-fresa-500",
                 img: "https://images.unsplash.com/photo-1587393855524-087f83d95bc9?auto=format&fit=crop&w=600&q=80",
-                pcts: { sano: 8, enfermo: 84, nutricion: 8 },
-                advice: "1. Retira la fresa afectada para que no contagie a las demás.\n2. No mojes los frutos directamente al regar.\n3. Consulta el remedio recomendado en la guía del INIA."
-            },
-            nutricional: {
-                title: "🟠 Problema de Nutrición / Clima",
-                badge: "Abono / Riego",
-                badgeClass: "bg-amber-100 text-amber-800 border-amber-400",
-                img: "https://images.unsplash.com/photo-1518635017498-87f514b751ba?auto=format&fit=crop&w=600&q=80",
-                pcts: { sano: 10, enfermo: 10, nutricion: 80 },
-                advice: "El fruto muestra falta de nutrientes o estrés por clima. Aplica abono foliar rico en calcio y boro."
+                pcts: { sano: 10, botrytis: 90 },
+                advice: "1. Retira la fresa afectada para que no contagie a las demás.\n2. No mojes los frutos directamente al regar.\n3. Aplica el producto biológico o preventivo recomendado en la guía del INIA."
             }
         };
 
@@ -329,15 +351,13 @@
             document.getElementById('diagAdvice').innerText = item.advice;
 
             document.getElementById('barSano').style.width = item.pcts.sano + '%';
-            document.getElementById('barEnfermo').style.width = item.pcts.enfermo + '%';
-            document.getElementById('barNutricional').style.width = item.pcts.nutricion + '%';
+            document.getElementById('barBotrytis').style.width = item.pcts.botrytis + '%';
 
             document.getElementById('valSano').innerText = item.pcts.sano + '%';
-            document.getElementById('valEnfermo').innerText = item.pcts.enfermo + '%';
-            document.getElementById('valNutricional').innerText = item.pcts.nutricion + '%';
+            document.getElementById('valBotrytis').innerText = item.pcts.botrytis + '%';
         }
 
-        // Función para capturar foto real con la cámara del celular
+        // FUNCIÓN INTACTA DE CÁMARA Y GALERÍA
         function previewSelectedImage(event) {
             const file = event.target.files[0];
             if (file) {
@@ -349,9 +369,51 @@
             }
         }
 
-        function runDiagnosticAnimation() {
+        // Función de análisis adaptada a 2 clases (Sano y Botrytis)
+        async function analizarConIA() {
             const card = document.getElementById('resultCard');
+            const imgElement = document.getElementById('activePhoto');
+            
             card.style.opacity = '0.4';
+
+            if (isModelLoaded && imgElement) {
+                try {
+                    const prediction = await model.predict(imgElement);
+                    let topPred = prediction[0];
+                    let pcts = { sano: 0, botrytis: 0 };
+
+                    prediction.forEach(p => {
+                        const prob = Math.round(p.probability * 100);
+                        const cName = p.className.toLowerCase();
+                        if (cName.includes('sano')) pcts.sano = prob;
+                        else pcts.botrytis = prob;
+
+                        if (p.probability > topPred.probability) topPred = p;
+                    });
+
+                    document.getElementById('barSano').style.width = pcts.sano + '%';
+                    document.getElementById('barBotrytis').style.width = pcts.botrytis + '%';
+
+                    document.getElementById('valSano').innerText = pcts.sano + '%';
+                    document.getElementById('valBotrytis').innerText = pcts.botrytis + '%';
+
+                    const name = topPred.className;
+                    if (name.toLowerCase().includes('sano')) {
+                        document.getElementById('diagTitle').innerText = "🟢 Fruto Sano";
+                        document.getElementById('diagBadge').innerText = "Excelente";
+                        document.getElementById('diagBadge').className = "text-[10px] font-extrabold px-2.5 py-1 rounded-full border bg-agri-100 text-agri-800 border-agri-400";
+                        document.getElementById('diagAdvice').innerText = "Fruto sano. Mantener ventilación y riego adecuado.";
+                    } else {
+                        document.getElementById('diagTitle').innerText = "🔴 Fruto con Botrytis";
+                        document.getElementById('diagBadge').innerText = "Atención";
+                        document.getElementById('diagBadge').className = "text-[10px] font-extrabold px-2.5 py-1 rounded-full border bg-fresa-50 text-fresa-700 border-fresa-500";
+                        document.getElementById('diagAdvice').innerText = "1. Retirar frutos infectados inmediatamente.\n2. Evitar humedad relativa alta.\n3. Aplicar bio-control fitosanitario.";
+                    }
+                } catch (err) {
+                    console.error("Error al procesar la imagen con IA", err);
+                }
+            }
+
             setTimeout(() => {
                 card.style.opacity = '1';
             }, 300);
