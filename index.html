@@ -187,36 +187,17 @@
 
             </main>
 
-            <!-- ================= VISTA 2: HISTORIAL ================= -->
+            <!-- ================= VISTA 2: HISTORIAL (DINÁMICO) ================= -->
             <div id="view-historial" class="p-4 flex-1 flex flex-col gap-3.5 hidden">
                 <div class="flex items-center justify-between">
                     <h2 class="font-display font-bold text-lg text-slate-900">Historial de Campo</h2>
-                    <span class="text-[10px] bg-agri-100 text-agri-800 font-extrabold px-2 py-0.5 rounded-full border border-agri-300">Últimos análisis</span>
+                    <span class="text-[10px] bg-agri-100 text-agri-800 font-extrabold px-2 py-0.5 rounded-full border border-agri-300">Registros</span>
                 </div>
-                <p class="text-xs text-slate-500">Aquí se registrarán todas las evaluaciones fotográficas realizadas en tus parcelas.</p>
+                <p class="text-xs text-slate-500">Aquí se registrarán automáticamente todas tus evaluaciones fotográficas.</p>
 
-                <div class="space-y-2.5 mt-1">
-                    <div class="bg-white border border-slate-200 rounded-xl p-3 flex items-center justify-between shadow-2xs">
-                        <div class="flex items-center gap-3">
-                            <img src="https://images.unsplash.com/photo-1587393855524-087f83d95bc9?auto=format&fit=crop&w=150&q=80" class="w-12 h-12 object-cover rounded-lg border border-slate-200">
-                            <div>
-                                <h4 class="text-xs font-bold text-slate-800">Botrytis cinerea</h4>
-                                <p class="text-[10px] text-slate-400">Hoy, 10:15 AM - Lote Principal</p>
-                            </div>
-                        </div>
-                        <span class="text-[10px] font-extrabold px-2 py-1 rounded-full bg-fresa-50 text-fresa-700 border border-fresa-500">90%</span>
-                    </div>
-
-                    <div class="bg-white border border-slate-200 rounded-xl p-3 flex items-center justify-between shadow-2xs">
-                        <div class="flex items-center gap-3">
-                            <img src="https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&fit=crop&w=150&q=80" class="w-12 h-12 object-cover rounded-lg border border-slate-200">
-                            <div>
-                                <h4 class="text-xs font-bold text-slate-800">Fruto Sano</h4>
-                                <p class="text-[10px] text-slate-400">Ayer, 4:20 PM - Parcela Norte</p>
-                            </div>
-                        </div>
-                        <span class="text-[10px] font-extrabold px-2 py-1 rounded-full bg-agri-50 text-agri-700 border border-agri-400">95%</span>
-                    </div>
+                <!-- Contenedor dinámico del historial -->
+                <div id="listaHistorial" class="space-y-2.5 mt-1 overflow-y-auto max-h-[550px]">
+                    <p class="text-xs text-slate-400 text-center py-6">Aún no hay análisis guardados en esta sesión.</p>
                 </div>
             </div>
 
@@ -235,8 +216,8 @@
                             <i class="fa-solid fa-triangle-exclamation"></i> 1. Podredumbre Gris (Botrytis cinerea)
                         </h3>
                         <p class="text-[11px] text-slate-600 leading-relaxed">
-                            <strong>Condiciones:</strong> Prolifera con alta humedad relativa (>85%) y temperaturas templadas de 15°C a 20°C[cite: 59]. Ataca flores, botones florales y frutos con un característico micelio grisáceo[cite: 59].<br>
-                            <strong>Manejo Integrado:</strong> Controlar los riegos para evitar exceso de humedad, eliminar frutos momificados en campo y realizar aplicaciones preventivas con mancozeb o curativas con iprodione o pirimetanil[cite: 59]. Uso de control biológico con <i>Gliocladium roseum</i>[cite: 59].
+                            <strong>Condiciones:</strong> Prolifera con alta humedad relativa (>85%) y temperaturas templadas de 15°C a 20°C. Ataca flores, botones florales y frutos con un característico micelio grisáceo.<br>
+                            <strong>Manejo Integrado:</strong> Controlar los riegos para evitar exceso de humedad, eliminar frutos momificados en campo y realizar aplicaciones preventivas con mancozeb o curativas con iprodione o pirimetanil. Uso de control biológico con <i>Gliocladium roseum</i>.
                         </p>
                     </div>
 
@@ -246,8 +227,8 @@
                             <i class="fa-solid fa-triangle-exclamation"></i> 2. Oídio o Cenicilla (Sphaerotheca macularis)
                         </h3>
                         <p class="text-[11px] text-slate-600 leading-relaxed">
-                            <strong>Condiciones:</strong> Se manifiesta como una pelusa blanquecina en el envés de las hojas y frutos, encrespándolas en forma de copa[cite: 59]. Prefiere temperaturas de 20°C a 25°C y tiempo soleado[cite: 59].<br>
-                            <strong>Manejo Integrado:</strong> Control preventivo inicial con azufre en polvo o micronizado (que también ayuda contra ácaros). En ataques severos, usar fungicidas sistémicos como penconazol o myclobutanil[cite: 59].
+                            <strong>Condiciones:</strong> Se manifiesta como una pelusa blanquecina en el envés de las hojas y frutos, encrespándolas en forma de copa. Prefiere temperaturas de 20°C a 25°C y tiempo soleado.<br>
+                            <strong>Manejo Integrado:</strong> Control preventivo inicial con azufre en polvo o micronizado (que también ayuda contra ácaros). En ataques severos, usar fungicidas sistémicos como penconazol o myclobutanil.
                         </p>
                     </div>
 
@@ -257,8 +238,8 @@
                             <i class="fa-solid fa-triangle-exclamation"></i> 3. Pudrición de Corona (Phytophthora cactorum)
                         </h3>
                         <p class="text-[11px] text-slate-600 leading-relaxed">
-                            <strong>Condiciones:</strong> Afecta suelos con mal drenaje y encharcamientos[cite: 59, 60]. Produce coloración rojiza en pecíolos y necrosis marrón oscura en el centro de la corona provocando la muerte de la planta[cite: 59, 60].<br>
-                            <strong>Manejo Integrado:</strong> Mantener excelente drenaje, utilizar material de siembra con sanidad comprobada y aplicar fosfito de potasio o fungicidas cúpricos[cite: 60].
+                            <strong>Condiciones:</strong> Afecta suelos con mal drenaje y encharcamientos. Produce coloración rojiza en pecíolos y necrosis marrón oscura en el centro de la corona provocando la muerte de la planta.<br>
+                            <strong>Manejo Integrado:</strong> Mantener excelente drenaje, utilizar material de siembra con sanidad comprobada y aplicar fosfito de potasio o fungicidas cúpricos.
                         </p>
                     </div>
 
@@ -268,8 +249,8 @@
                             <i class="fa-solid fa-book-medical"></i> 4. Mancha Foliar (Mycosphaerella fragariae)
                         </h3>
                         <p class="text-[11px] text-slate-600 leading-relaxed">
-                            <strong>Condiciones:</strong> Produce manchas circulares grises con bordes de color rojo a púrpura en hojas y pecíolos, reduciendo la capacidad fotosintética[cite: 60].<br>
-                            <strong>Manejo Integrado:</strong> Realizar podas sanitarias eliminando hojas viejas afectadas y aplicar protectores a base de cobre, mancozeb o captan[cite: 60].
+                            <strong>Condiciones:</strong> Produce manchas circulares grises con bordes de color rojo a púrpura en hojas y pecíolos, reduciendo la capacidad fotosintética.<br>
+                            <strong>Manejo Integrado:</strong> Realizar podas sanitarias eliminando hojas viejas afectadas y aplicar protectores a base de cobre, mancozeb o captan.
                         </p>
                     </div>
                 </div>
@@ -294,13 +275,14 @@
         </div>
     </div>
 
-    <!-- Scripting de Funcionalidad, Navegación e Integración de IA (2 Clases) -->
+    <!-- Scripting de Funcionalidad, Navegación, IA e Historial Dinámico -->
     <script>
-        // PEGA AQUÍ EL LINK DE TU MODELO EXPORTADO DESDE TEACHABLE MACHINE
+        // TU LINK REAL DE TEACHABLE MACHINE
         const URL_MODELO = "https://teachablemachine.withgoogle.com/models/bL8ihpje8/";
 
         let model, maxPredictions;
         let isModelLoaded = false;
+        let historialAnalisis = [];
 
         async function loadModel() {
             try {
@@ -314,7 +296,7 @@
                 statusBadge.innerHTML = '<span>IA Lista</span> 🤖';
                 statusBadge.className = 'bg-emerald-600 text-white px-2.5 py-1 rounded-full text-[10px] font-bold flex items-center gap-1';
             } catch (error) {
-                console.log("Servicio ejecutando simulador o esperando URL válida de Teachable Machine.");
+                console.log("Servicio ejecutando simulador o esperando conexión de Teachable Machine.");
             }
         }
 
@@ -357,7 +339,7 @@
             document.getElementById('valBotrytis').innerText = item.pcts.botrytis + '%';
         }
 
-        // FUNCIÓN INTACTA DE CÁMARA Y GALERÍA
+        // Cámara y Galería
         function previewSelectedImage(event) {
             const file = event.target.files[0];
             if (file) {
@@ -369,7 +351,32 @@
             }
         }
 
-        // Función de análisis adaptada a 2 clases (Sano y Botrytis)
+        // Función para renderizar el historial guardado
+        function renderizarHistorial() {
+            const contenedor = document.getElementById('listaHistorial');
+            if (historialAnalisis.length === 0) {
+                contenedor.innerHTML = '<p class="text-xs text-slate-400 text-center py-6">Aún no hay análisis guardados en esta sesión.</p>';
+                return;
+            }
+
+            contenedor.innerHTML = '';
+            historialAnalisis.forEach(item => {
+                contenedor.innerHTML += `
+                    <div class="bg-white border border-slate-200 rounded-xl p-3 flex items-center justify-between shadow-2xs">
+                        <div class="flex items-center gap-3">
+                            <img src="${item.img}" class="w-12 h-12 object-cover rounded-lg border border-slate-200">
+                            <div>
+                                <h4 class="text-xs font-bold text-slate-800">${item.titulo}</h4>
+                                <p class="text-[10px] text-slate-400">${item.fecha}</p>
+                            </div>
+                        </div>
+                        <span class="text-[10px] font-extrabold px-2 py-1 rounded-full ${item.badgeClass}">${item.porcentaje}%</span>
+                    </div>
+                `;
+            });
+        }
+
+        // Función de análisis con IA o Simulador + Registro Automático en Historial
         async function analizarConIA() {
             const card = document.getElementById('resultCard');
             const imgElement = document.getElementById('activePhoto');
@@ -413,6 +420,27 @@
                     console.error("Error al procesar la imagen con IA", err);
                 }
             }
+
+            // Capturar resultado actual para guardar en Historial
+            const imgActual = imgElement.src;
+            const tituloActual = document.getElementById('diagTitle').innerText;
+            const badgeClassActual = document.getElementById('diagBadge').className.includes('fresa') 
+                ? 'bg-fresa-50 text-fresa-700 border border-fresa-500' 
+                : 'bg-agri-50 text-agri-700 border border-agri-400';
+            
+            const porcentajeMax = document.getElementById('valBotrytis').innerText;
+            const fechaActual = new Date().toLocaleDateString() + ' - ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            // Agregar al arreglo del historial
+            historialAnalisis.unshift({
+                img: imgActual,
+                titulo: tituloActual,
+                badgeClass: badgeClassActual,
+                porcentaje: porcentajeMax,
+                fecha: fechaActual
+            });
+
+            renderizarHistorial();
 
             setTimeout(() => {
                 card.style.opacity = '1';
